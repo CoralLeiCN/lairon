@@ -9,4 +9,5 @@ name = "lairon"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = "0.22.0"
+pyo3 = { version = "0.22", features = ["extension-module"] }
+numpy = "0.22"
