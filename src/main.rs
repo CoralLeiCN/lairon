@@ -2,18 +2,10 @@
 use numpy::ndarray;
 // import the crosstab function from lib.rs
 pub mod descriptive;
-use std::collections::HashSet;
+pub mod utils;
+use crate::utils::argsort;
+use numpy::ndarray::Array;
 
-use crate::descriptive::pivot::crosstab;
-// use crate::descriptive::pivot::find_unique_values;
-use crate::descriptive::pivot::get_array_lengths;
-// use crate::utils::util::argsort;
-use numpy::ndarray::{Array, Array1, ArrayBase, ArrayView1, IxDyn};
-pub fn argsort<T: PartialOrd>(arr: &Array1<T>) -> Vec<usize> {
-    let mut indices: Vec<usize> = (0..arr.len()).collect();
-    indices.sort_by(|&a, &b| arr[a].partial_cmp(&arr[b]).unwrap());
-    indices
-}
 fn main() {
     // init dummy array Array<A, Ix1>
     let a = ndarray::arr1(&[1.0, 2.0, 3.0]);
