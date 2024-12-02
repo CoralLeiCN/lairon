@@ -4,7 +4,10 @@ use numpy::ndarray;
 pub mod descriptive;
 pub mod utils;
 use crate::utils::argsort;
+use crate::utils::array_value_counts;
+
 use numpy::ndarray::Array;
+use std::collections::HashMap;
 
 fn main() {
     // init dummy array Array<A, Ix1>
@@ -15,6 +18,11 @@ fn main() {
     // call argsort
     let perm: Vec<usize> = argsort(&a);
 
+    let arr1: ndarray::ArrayBase<ndarray::OwnedRepr<i32>, ndarray::Dim<ndarray::IxDynImpl>> =
+        Array::from_vec(vec![0, 2, 1, 2, 3, 4])
+            .into_shape_with_order(ndarray::IxDyn(&[6]))
+            .unwrap();
+    let map: HashMap<&i32, i32> = array_value_counts(&arr1);
     // call crosstab
     // let c: (usize, usize) = get_array_lengths(a.view(), b.view());
     // let xtab_result = crosstab(a.view(), b.view());
