@@ -1,35 +1,51 @@
-use itertools::Itertools;
-use numpy::ndarray::{Array, ArrayBase, ArrayView1, IxDyn};
-
+use numpy::ndarray::Array1;
+// use itertools::Itertools;
+use numpy::ndarray::Array;
 // ArrayViewD, ArrayViewMutD, CowRepr, Array1, ArrayD
 // use numpy::{IntoPyArray, PyArrayDyn, PyArrayMethods, PyReadonlyArrayDyn};
 // use pyo3::prelude::*;
 // use pyo3::{pymodule, types::PyModule, Bound, PyResult, Python};
+use crate::utils::array_value_counts;
+use crate::utils::inverse_index;
+// import the ndarray crate
+use numpy::ndarray;
+// import the crosstab function from lib.rs
 
-pub fn get_array_lengths<'a, T>(a: ArrayView1<'a, T>, b: ArrayView1<'a, T>) -> (usize, usize) {
-    (a.len(), b.len())
-}
+use std::collections::HashMap;
 
 // crosstab
-pub fn crosstab<'a, T>(a: ArrayView1<'a, T>, b: ArrayView1<'a, T>) -> Array<f64, IxDyn> {
+pub fn crosstab(arr1: Array1<i32>, arr2: Array1<i32>) -> Array<i32, ndarray::Dim<[usize; 2]>> {
     // ArrayD<T> {
-    let crosstab_size: (usize, usize) = get_array_lengths(a, b);
-    let crosstab_shape = IxDyn(&[crosstab_size.0, crosstab_size.1]);
+    let inv_idx1 = inverse_index(&arr1);
+    let inv_idx2 = inverse_index(&arr2);
+    println!("{:?}", inv_idx1);
+    println!("{:?}", inv_idx2);
 
-    let mut xtab = Array::<f64, _>::zeros(crosstab_shape);
-    for (i, a) in a.iter().enumerate() {
-        for (j, b) in b.iter().enumerate() {
-            xtab[[i, j]] += 1.0;
-            println!(
-                "Index i : {}, Index j : {}, Value: {:?}",
-                i,
-                j,
-                xtab[[i, j]]
-            );
-        }
+    let arr1_value_count: HashMap<&i32, i32> = array_value_counts(&arr1);
+    let arr2_value_count: HashMap<&i32, i32> = array_value_counts(&arr2);
+
+    println!("{:?}", arr1_value_count);
+    println!("{:?}", arr2_value_count);
+    let len_map_arr1: usize = arr1_value_count.len();
+    let len_map_arr2: usize = arr2_value_count.len();
+
+    println!(
+        "unique value of array1 {:?}, unique value of array2 {:?}",
+        len_map_arr1, len_map_arr2
+    );
+
+    // init empty crosstab
+    let mut result: ndarray::ArrayBase<ndarray::OwnedRepr<i32>, ndarray::Dim<[usize; 2]>> =
+        Array::<i32, _>::zeros((len_map_arr1, len_map_arr2));
+    println!("{:?}", result);
+
+    for ((i, a), (j, b)) in inv_idx1.iter().enumerate().zip(inv_idx2.iter().enumerate()) {
+        result[(*a as usize, *b as usize)] += 1;
+        println!("Index i : {}, Index j : {}", a, b)
     }
+    println!("{:?}", result);
 
-    xtab
+    result
     // let mut c = Array::zeros(IxDyn(&[crosstab_size.0, crosstab_size.1]));
     // c
     // for (i, a) in a.iter().enumerate() {
