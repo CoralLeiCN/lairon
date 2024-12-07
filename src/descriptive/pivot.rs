@@ -1,15 +1,8 @@
-use numpy::ndarray::Array1;
-// use itertools::Itertools;
-use numpy::ndarray::Array;
-// ArrayViewD, ArrayViewMutD, CowRepr, Array1, ArrayD
-// use numpy::{IntoPyArray, PyArrayDyn, PyArrayMethods, PyReadonlyArrayDyn};
-// use pyo3::prelude::*;
-// use pyo3::{pymodule, types::PyModule, Bound, PyResult, Python};
 use crate::utils::array_value_counts;
 use crate::utils::inverse_index;
-// import the ndarray crate
 use numpy::ndarray;
-// import the crosstab function from lib.rs
+use numpy::ndarray::Array;
+use numpy::ndarray::Array1;
 
 use std::collections::HashMap;
 
@@ -46,12 +39,4 @@ pub fn crosstab(arr1: Array1<i32>, arr2: Array1<i32>) -> Array<i32, ndarray::Dim
     println!("{:?}", result);
 
     result
-    // let mut c = Array::zeros(IxDyn(&[crosstab_size.0, crosstab_size.1]));
-    // c
-    // for (i, a) in a.iter().enumerate() {
-    //     for (j, b) in b.iter().enumerate() {
-    //         c[[i, j]] = a * b;
-    //     }
-    // }
-    // c
 }
