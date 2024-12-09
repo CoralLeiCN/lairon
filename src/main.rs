@@ -4,12 +4,7 @@ use numpy::ndarray;
 pub mod descriptive;
 pub mod utils;
 use crate::descriptive::pivot::crosstab;
-use crate::utils::argsort;
-use crate::utils::array_value_counts;
-use crate::utils::inverse_index;
-use numpy::ndarray::Array;
-use numpy::ndarray::Array1;
-use std::collections::HashMap;
+
 fn main() {
     // call argsort
     let arr1 = ndarray::arr1(&[0, 2, 1, 2, 3, 4, 2, 2]);
