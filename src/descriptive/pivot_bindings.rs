@@ -1,46 +1,32 @@
-use crate::utils::array_value_counts;
-use crate::utils::inverse_index;
-use itertools::Itertools;
-use numpy::ndarray::Array;
-use numpy::ndarray::Array1;
-use numpy::{IntoPyArray, PyArrayDyn, PyArrayMethods, PyReadonlyArrayDyn};
-use pyo3::prelude::*;
-use pyo3::{pymodule, types::PyModule, Bound, PyResult, Python};
-// import the ndarray crate
-use numpy::ndarray;
-// import the crosstab function from lib.rs
-
 use crate::descriptive::pivot::crosstab;
-use std::collections::HashMap;
-
-use numpy::ndarray::{Array1, ArrayBase, ArrayD, ArrayView1, ArrayViewD, ArrayViewMutD, IxDyn};
-use numpy::{IntoPyArray, PyArrayDyn, PyArrayMethods, PyReadonlyArrayDyn};
+use numpy::ndarray::Array1;
+use numpy::{PyArrayDyn, PyReadonlyArrayDyn};
 use pyo3::prelude::*;
-use pyo3::{pymodule, types::PyModule, Bound, PyResult, Python};
+use pyo3::{types::PyModule, Bound, PyResult, Python};
 
+// official example
+//https://github.com/PyO3/pyo3
 /// Formats the sum of two numbers as string.
 #[pyfunction]
-fn crosstab_bindings(a: Array1<int32>, b: Array1<int32>) -> PyResult<Integer> {
-    Ok(crosstab(arr1, arr2))
+fn sum_as_string(a: usize, b: usize) -> PyResult<String> {
+    Ok((a + b).to_string())
 }
 
-/// A Python module implemented in Rust.
-#[name = ("stats")]
-fn lairon<'py>(_py: Python<'py>, m: &Bound<'py, PyModule>) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(crosstab_bindings, m)?)?;
+fn crosstab_bindings(a: PyReadonlyArrayDyn<i32>, b: PyReadonlyArrayDyn<i32>) -> PyArrayDyn<i32> {
+    let a = a.as_array();
+    let b = b.as_array();
+    let c = crosstab(a, b);
 
-    // wrapper of `crosstab`
-    #[pyfn(m)]
-    #[pyo3(name = "crosstab")]
-    fn crosstab_py<'py>(
-        py: Python<'py>,
-        a: PyReadonlyArrayDyn<'py, f64>,
-        b: PyReadonlyArrayDyn<'py, f64>,
-    ) -> Bound<'py, PyArrayDyn<f64>> {
-        let a = a.as_array();
-        let b = b.as_array();
-        let c = crosstab_bindings(a, b);
-        c.into_pyarray_bound(py)
-    }
+    Ok(c)
+}
+
+/// A Python module implemented in Rust. The name of this function must match
+/// the `lib.name` setting in the `Cargo.toml`, else Python will not be able to
+/// import the module.
+#[pymodule]
+#[pyo3(name = "lairon")]
+fn lairon(m: &Bound<'_, PyModule>) -> PyResult<()> {
+    m.add_function(wrap_pyfunction!(sum_as_string, m)?)?;
+    m.add_function(wrap_pyfunction!(crosstab_bindings, m)?)?;
     Ok(())
 }
