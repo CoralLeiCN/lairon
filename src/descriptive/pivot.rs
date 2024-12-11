@@ -32,7 +32,7 @@ pub fn crosstab(arr1: Array1<i32>, arr2: Array1<i32>) -> Array<i32, ndarray::Dim
         Array::<i32, _>::zeros((len_map_arr1, len_map_arr2));
     println!("{:?}", result);
 
-    for ((i, a), (j, b)) in inv_idx1.iter().enumerate().zip(inv_idx2.iter().enumerate()) {
+    for ((_i, a), (_j, b)) in inv_idx1.iter().enumerate().zip(inv_idx2.iter().enumerate()) {
         result[(*a as usize, *b as usize)] += 1;
         println!("Index i : {}, Index j : {}", a, b)
     }
