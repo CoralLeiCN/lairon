@@ -1,9 +1,11 @@
 use crate::descriptive::pivot::crosstab;
-use numpy::ndarray::Array1;
-use numpy::{PyArrayDyn, PyReadonlyArrayDyn};
-use pyo3::prelude::*;
-use pyo3::{types::PyModule, Bound, PyResult, Python};
+use ndarray::Array;
+use ndarray::ArrayBase;
+use pyo3::wrap_pyfunction;
 
+use numpy::{PyArray2, PyArrayDyn, PyReadonlyArray1};
+use pyo3::prelude::*;
+use pyo3::{types::PyModule, Bound, PyResult};
 // official example
 //https://github.com/PyO3/pyo3
 /// Formats the sum of two numbers as string.
@@ -12,12 +14,19 @@ fn sum_as_string(a: usize, b: usize) -> PyResult<String> {
     Ok((a + b).to_string())
 }
 
-fn crosstab_bindings(a: PyReadonlyArrayDyn<i32>, b: PyReadonlyArrayDyn<i32>) -> PyArrayDyn<i32> {
+#[pyfunction]
+fn crosstab_bindings(
+    py: Python<'_>,
+    a: PyReadonlyArray1<i32>,
+    b: PyReadonlyArray1<i32>,
+) -> PyResult<Py<PyAny>> {
+    // fn crosstab_bindings(a: PyArrayDyn<i32>, b: PyArrayDyn<i32>) -> PyArrayDyn<i32> {
     let a = a.as_array();
-    let b = b.as_array();
-    let c = crosstab(a, b);
+    let b: ndarray::ArrayBase<ndarray::ViewRepr<&i32>, ndarray::Dim<[usize; 1]>> = b.as_array();
+    let result: ndarray::ArrayBase<ndarray::OwnedRepr<i32>, ndarray::Dim<[usize; 2]>> =
+        crosstab(a.to_owned(), b.to_owned());
 
-    Ok(c)
+    Ok(PyArray2::from_owned_array_bound(py, result).into_py(py))
 }
 
 /// A Python module implemented in Rust. The name of this function must match
