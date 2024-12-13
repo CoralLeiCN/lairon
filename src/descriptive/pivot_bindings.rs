@@ -1,10 +1,7 @@
 use crate::descriptive::pivot::crosstab;
-use ndarray::Array;
-use ndarray::ArrayBase;
-use pyo3::wrap_pyfunction;
-
-use numpy::{PyArray2, PyArrayDyn, PyReadonlyArray1};
+use numpy::{IntoPyArray, PyArray2, PyReadonlyArray1};
 use pyo3::prelude::*;
+use pyo3::wrap_pyfunction;
 use pyo3::{types::PyModule, Bound, PyResult};
 // official example
 //https://github.com/PyO3/pyo3
@@ -15,18 +12,17 @@ fn sum_as_string(a: usize, b: usize) -> PyResult<String> {
 }
 
 #[pyfunction]
-fn crosstab_bindings(
-    py: Python<'_>,
-    a: PyReadonlyArray1<i32>,
-    b: PyReadonlyArray1<i32>,
-) -> PyResult<Py<PyAny>> {
+fn crosstab_bindings<'py>(
+    py: Python<'py>,
+    a: PyReadonlyArray1<'py, i32>,
+    b: PyReadonlyArray1<'py, i32>,
+) -> Bound<'py, PyArray2<i32>> {
     // fn crosstab_bindings(a: PyArrayDyn<i32>, b: PyArrayDyn<i32>) -> PyArrayDyn<i32> {
     let a = a.as_array();
-    let b: ndarray::ArrayBase<ndarray::ViewRepr<&i32>, ndarray::Dim<[usize; 1]>> = b.as_array();
+    let b = b.as_array();
     let result: ndarray::ArrayBase<ndarray::OwnedRepr<i32>, ndarray::Dim<[usize; 2]>> =
-        crosstab(a.to_owned(), b.to_owned());
-
-    Ok(PyArray2::from_owned_array_bound(py, result).into_py(py))
+        crosstab(a, b);
+    result.into_pyarray(py)
 }
 
 /// A Python module implemented in Rust. The name of this function must match

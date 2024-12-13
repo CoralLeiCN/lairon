@@ -12,8 +12,8 @@ fn main() {
     // let arr2 = Array::from_vec(vec![0, 1, 2, 3, 4, 5])
     //     .into_shape_with_order(ndarray::IxDyn(&[6]))
     //     .unwrap();
-    let result = crosstab(arr1, arr2);
-    println!("{:?}", result);
+    // let result = crosstab(arr1, arr2);
+    // println!("{:?}", result);
     // call crosstab
     // let c: (usize, usize) = get_array_lengths(a.view(), b.view());
     // let xtab_result = crosstab(a.view(), b.view());
