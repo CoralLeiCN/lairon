@@ -14,7 +14,7 @@ use numpy::ndarray;
 use ndarray::{Array1, Array2, Axis};
 use std::collections::HashSet;
 
-fn crosstab1(arr1: &Array1<i32>, arr2: &Array1<i32>) -> Array2<usize> {
+pub fn crosstab1(arr1: &Array1<i32>, arr2: &Array1<i32>) -> Array2<usize> {
     // Get unique values
     let unique1: Vec<i32> = arr1
         .iter()
@@ -54,12 +54,12 @@ fn crosstab1(arr1: &Array1<i32>, arr2: &Array1<i32>) -> Array2<usize> {
 }
 
 #[pyfunction]
-fn sum_as_string(a: usize, b: usize) -> PyResult<String> {
+pub fn sum_as_string(a: usize, b: usize) -> PyResult<String> {
     Ok((a + b).to_string())
 }
 
 #[pyfunction]
-fn crosstab_bindings<'py>(
+pub fn crosstab_bindings<'py>(
     py: Python<'py>,
     a: PyReadonlyArray1<'py, i32>,
     b: PyReadonlyArray1<'py, i32>,
@@ -84,14 +84,3 @@ fn crosstab_bindings<'py>(
 //         crosstab(a, b);
 //     result.into_pyarray(py)
 // }
-
-/// A Python module implemented in Rust. The name of this function must match
-/// the `lib.name` setting in the `Cargo.toml`, else Python will not be able to
-/// import the module.
-#[pymodule]
-#[pyo3(name = "lairon")]
-fn lairon(m: &Bound<'_, PyModule>) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(sum_as_string, m)?)?;
-    m.add_function(wrap_pyfunction!(crosstab_bindings, m)?)?;
-    Ok(())
-}
