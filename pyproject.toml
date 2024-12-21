@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "lairon"
-requires-python = ">=3.8"
+requires-python = ">=3.9"
 classifiers = [
     "Programming Language :: Rust",
     "Programming Language :: Python :: Implementation :: CPython",
@@ -13,4 +13,5 @@ classifiers = [
 dynamic = ["version"]
 [tool.maturin]
 features = ["pyo3/extension-module"]
-python-source = "lairon"             # the python source directory
+python-source = "python"             # the python source directory
+# module-name = "lairon.lairon"        # module-name = <package name>.<rust pymodule name>
