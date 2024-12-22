@@ -4,6 +4,7 @@ use numpy::ndarray;
 pub mod descriptive;
 pub mod utils;
 use crate::descriptive::pivot::crosstab;
+use crate::descriptive::pivot::margins;
 
 fn main() {
     // call argsort
@@ -12,4 +13,9 @@ fn main() {
     // call crosstab
     let xtab_result = crosstab(&arr1, &arr2);
     println!("{:?}", xtab_result);
+
+    // call margins
+    let (row_margins, col_margins) = margins(&xtab_result);
+    println!("row margins{:?}", row_margins);
+    println!("col margins{:?}", col_margins);
 }

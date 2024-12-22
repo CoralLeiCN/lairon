@@ -42,3 +42,10 @@ pub fn crosstab(arr1: &Array1<i32>, arr2: &Array1<i32>) -> Array2<usize> {
 
     result
 }
+
+// calculate the margins of a crosstab
+pub fn margins(arr: &Array2<usize>) -> (Array1<usize>, Array1<usize>) {
+    let row_sums = arr.sum_axis(ndarray::Axis(1));
+    let col_sums = arr.sum_axis(ndarray::Axis(0));
+    (row_sums, col_sums)
+}
