@@ -49,3 +49,40 @@ pub fn margins(arr: &Array2<usize>) -> (Array1<usize>, Array1<usize>) {
     let col_sums = arr.sum_axis(ndarray::Axis(0));
     (row_sums, col_sums)
 }
+
+// test for crosstab
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_crosstab() {
+        let arr1 = ndarray::arr1(&[0, 2, 1, 2, 3, 4, 2, 2]);
+        let arr2 = ndarray::arr1(&[0, 1, 2, 3, 5, 5, 2, 2]);
+        let xtab_result = crosstab(&arr1, &arr2);
+        let expected_result = ndarray::arr2(&[
+            [1, 0, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0, 0],
+            [0, 0, 3, 0, 0, 0],
+            [0, 0, 0, 1, 0, 0],
+            [0, 0, 0, 0, 0, 1],
+        ]);
+        assert_eq!(xtab_result, expected_result);
+    }
+
+    #[test]
+    fn test_margins() {
+        let arr = ndarray::arr2(&[
+            [1, 0, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0, 0],
+            [0, 0, 3, 0, 0, 0],
+            [0, 0, 0, 1, 0, 0],
+            [0, 0, 0, 0, 0, 1],
+        ]);
+        let (row_margins, col_margins) = margins(&arr);
+        let expected_row_margins = ndarray::arr1(&[1, 1, 3, 1, 1]);
+        let expected_col_margins = ndarray::arr1(&[1, 0, 4, 1, 0, 1]);
+        assert_eq!(row_margins, expected_row_margins);
+        assert_eq!(col_margins, expected_col_margins);
+    }
+}
