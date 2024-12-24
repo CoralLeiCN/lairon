@@ -61,11 +61,11 @@ mod tests {
         let arr2 = ndarray::arr1(&[0, 1, 2, 3, 5, 5, 2, 2]);
         let xtab_result = crosstab(&arr1, &arr2);
         let expected_result = ndarray::arr2(&[
-            [1, 0, 0, 0, 0, 0],
-            [0, 0, 1, 0, 0, 0],
-            [0, 0, 3, 0, 0, 0],
-            [0, 0, 0, 1, 0, 0],
-            [0, 0, 0, 0, 0, 1],
+            [1, 0, 0, 0, 0],
+            [0, 0, 1, 0, 0],
+            [0, 1, 2, 1, 0],
+            [0, 0, 0, 0, 1],
+            [0, 0, 0, 0, 1],
         ]);
         assert_eq!(xtab_result, expected_result);
     }
