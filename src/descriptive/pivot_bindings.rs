@@ -6,7 +6,7 @@ use pyo3::{Bound, PyResult};
 // official example
 //https://github.com/PyO3/pyo3
 // use crate::descriptive::pivot::crosstab;
-/// Formats the sum of two numbers as string.
+// Formats the sum of two numbers as string.
 // import the ndarray crate
 #[pyfunction]
 pub fn sum_as_string(a: usize, b: usize) -> PyResult<String> {
@@ -19,7 +19,6 @@ pub fn crosstab_bindings<'py>(
     a: PyReadonlyArray1<'py, i32>,
     b: PyReadonlyArray1<'py, i32>,
 ) -> Bound<'py, PyArray2<usize>> {
-    // fn crosstab_bindings(a: PyArrayDyn<i32>, b: PyArrayDyn<i32>) -> PyArrayDyn<i32> {
     let a = a.as_array();
     let b = b.as_array();
     let result = crosstab(&a.to_owned(), &b.to_owned());
