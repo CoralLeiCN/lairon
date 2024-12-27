@@ -50,6 +50,20 @@ pub fn margins(arr: &Array2<usize>) -> (Array1<usize>, Array1<usize>) {
     (row_sums, col_sums)
 }
 
+// modified from https://github.com/scipy/scipy/blob/92d2a8592782ee19a1161d0bf3fc2241ba78bb63/scipy/stats/contingency.py#L90-L135
+// for 2d only
+pub fn expected_freq_2d(arr: &Array2<usize>) -> Array2<f64> {
+    let (row_margins, col_margins) = margins(&arr);
+    let total = row_margins.sum();
+    let mut result = Array2::<f64>::zeros(arr.dim());
+    for i in 0..arr.dim().0 {
+        for j in 0..arr.dim().1 {
+            result[[i, j]] = (row_margins[i] as f64 * col_margins[j] as f64) / total as f64;
+        }
+    }
+    result
+}
+
 // test for crosstab
 #[cfg(test)]
 mod tests {
@@ -84,5 +98,13 @@ mod tests {
         let expected_col_margins = ndarray::arr1(&[1, 0, 4, 1, 0, 1]);
         assert_eq!(row_margins, expected_row_margins);
         assert_eq!(col_margins, expected_col_margins);
+    }
+
+    #[test]
+    fn test_expected_frequencies() {
+        let arr = ndarray::arr2(&[[10, 10, 20], [20, 20, 20]]);
+        let expected_result = ndarray::arr2(&[[12., 12., 16.], [18., 18., 24.]]);
+        let result = expected_frequencies(&arr);
+        assert_eq!(result, expected_result);
     }
 }
