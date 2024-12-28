@@ -1,6 +1,6 @@
 use crate::descriptive::pivot::crosstab;
-
-use numpy::{IntoPyArray, PyArray2, PyReadonlyArray1};
+use crate::descriptive::pivot::margins;
+use numpy::{IntoPyArray, PyArray1, PyArray2, PyReadonlyArray1, PyReadonlyArray2};
 use pyo3::prelude::*;
 use pyo3::{Bound, PyResult};
 // official example
@@ -23,4 +23,14 @@ pub fn crosstab_bindings<'py>(
     let b = b.as_array();
     let result = crosstab(&a.to_owned(), &b.to_owned());
     result.into_pyarray(py)
+}
+
+#[pyfunction]
+pub fn margins_bindings<'py>(
+    py: Python<'py>,
+    arr: PyReadonlyArray2<'py, usize>,
+) -> (Bound<'py, PyArray1<usize>>, Bound<'py, PyArray1<usize>>) {
+    let arr = arr.as_array();
+    let (row_sums, col_sums) = margins(&arr.to_owned());
+    (row_sums.into_pyarray(py), col_sums.into_pyarray(py))
 }
