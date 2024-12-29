@@ -1,8 +1,10 @@
 pub mod descriptive;
 pub mod utils;
 use descriptive::pivot_bindings::crosstab_bindings;
+use descriptive::pivot_bindings::expected_freq_2d_bindings;
 use descriptive::pivot_bindings::margins_bindings;
 use descriptive::pivot_bindings::sum_as_string;
+
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
 use pyo3::{types::PyModule, Bound, PyResult};
@@ -20,5 +22,6 @@ fn lairon(m: &Bound<'_, PyModule>) -> PyResult<()> {
     m.add_function(wrap_pyfunction!(sum_as_string, m)?)?;
     m.add_function(wrap_pyfunction!(crosstab_bindings, m)?)?;
     m.add_function(wrap_pyfunction!(margins_bindings, m)?)?;
+    m.add_function(wrap_pyfunction!(expected_freq_2d_bindings, m)?)?;
     Ok(())
 }

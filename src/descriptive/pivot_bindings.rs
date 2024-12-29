@@ -1,4 +1,5 @@
 use crate::descriptive::pivot::crosstab;
+use crate::descriptive::pivot::expected_freq_2d;
 use crate::descriptive::pivot::margins;
 use numpy::{IntoPyArray, PyArray1, PyArray2, PyReadonlyArray1, PyReadonlyArray2};
 use pyo3::prelude::*;
@@ -33,4 +34,15 @@ pub fn margins_bindings<'py>(
     let arr = arr.as_array();
     let (row_sums, col_sums) = margins(&arr.to_owned());
     (row_sums.into_pyarray(py), col_sums.into_pyarray(py))
+}
+
+//binding for expected frequency
+#[pyfunction]
+pub fn expected_freq_2d_bindings<'py>(
+    py: Python<'py>,
+    arr: PyReadonlyArray2<'py, usize>,
+) -> Bound<'py, PyArray2<f64>> {
+    let arr = arr.as_array();
+    let result = expected_freq_2d(&arr.to_owned());
+    result.into_pyarray(py)
 }
