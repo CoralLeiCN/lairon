@@ -19,7 +19,6 @@ use pyo3::{types::PyModule, Bound, PyResult};
 /// import the module.
 #[pymodule]
 fn lairon(m: &Bound<'_, PyModule>) -> PyResult<()> {
-    m.add_function(wrap_pyfunction!(sum_as_string, m)?)?;
     m.add_function(wrap_pyfunction!(crosstab_bindings, m)?)?;
     m.add_function(wrap_pyfunction!(margins_bindings, m)?)?;
     m.add_function(wrap_pyfunction!(expected_freq_2d_bindings, m)?)?;

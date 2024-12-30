@@ -9,10 +9,6 @@ use pyo3::{Bound, PyResult};
 // use crate::descriptive::pivot::crosstab;
 // Formats the sum of two numbers as string.
 // import the ndarray crate
-#[pyfunction]
-pub fn sum_as_string(a: usize, b: usize) -> PyResult<String> {
-    Ok((a + b).to_string())
-}
 
 #[pyfunction]
 pub fn crosstab_bindings<'py>(
