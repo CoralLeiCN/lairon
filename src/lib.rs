@@ -3,7 +3,6 @@ pub mod utils;
 use descriptive::pivot_bindings::crosstab_bindings;
 use descriptive::pivot_bindings::expected_freq_2d_bindings;
 use descriptive::pivot_bindings::margins_bindings;
-use descriptive::pivot_bindings::sum_as_string;
 
 use pyo3::prelude::*;
 use pyo3::wrap_pyfunction;
